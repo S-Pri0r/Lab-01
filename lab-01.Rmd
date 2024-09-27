@@ -1,6 +1,6 @@
 ---
 title: "Lab 01 - UK Attractions"
-author: "INSERT NAME HERE"
+author: "Sam Prior"
 date: "`r Sys.Date()`"
 output: html_document
 ---
@@ -37,7 +37,7 @@ _Create a frequency table of the number of tourist attractions in the data set b
 ```{r Ex_a}
 # Delete the comment '#' symbol at the start of the next line and complete the code. 
 
-#visitors %>% count(_____)
+visitors %>% count(region)
 ```
 
 ### Exercise b.
@@ -47,7 +47,7 @@ _Create a frequency table by `admission` and `setting`._
 ```{r Ex_b}
 # Delete the comment '#' symbol at the start of the next line and complete the code.
 
-#visitors %>% count(_____, _____)
+visitors %>% count(admission, setting)
 ```
 
 
@@ -69,6 +69,7 @@ visitors %>% summarise_all(class)
 
 _Which attraction had the most number of visitors in 2022?_
 
+_The Crown estate, Windsor Great Park_
 ```{r Q3}
 visitors %>% arrange(desc(n_2022))
 ```
@@ -77,15 +78,15 @@ visitors %>% arrange(desc(n_2022))
 
 _What are the top 10 most visited attractions in 2021?_
 ```{r Ex_c}
-#visitors %>% 
-#  arrange(____(____)) %>%
-#  head(n = ____)
+visitors %>% 
+  arrange(desc(n_2021)) %>%
+  head(n = 10)
 ```
 
 ## Question 4
 
 _What is the admission charge for the `"National Museum of Scotland"`?_
-
+_It's free of charge_
 ```{r Q4}
 visitors %>% filter(attraction == "National Museum of Scotland")
 ```
@@ -95,31 +96,34 @@ visitors %>% filter(attraction == "National Museum of Scotland")
 
 _Which attraction had exactly 565,772 visitors in 2022?_
 
+_Knowsley Safari and Knowsley Hall_
 ```{r Ex_d}
-#visitors %>% filter(___ == ____)
+visitors %>% filter(n_2022 == 565772)
 ```
 
 ### Exercise e.
 
 _How many attraction had more than 1 million visitors in 2022?_
 
+_22_
 ```{r Ex_e}
-#visitors %>% 
-#  filter(____) %>%
-#  count()
+visitors %>% 
+  filter(n_2022 > 1000000) %>%
+  count()
 ```
 
 ## Question 5
 
 _How many `"O"`utside attractions are there in the `"Yorkshire and the Humber"` region that gives `"Members"` free admission, which had more than 100,000 visitors in 2022?_
 
+_3_
 ```{r Q5}
 visitors %>%
   filter(
     setting == "O",
     region == "Yorkshire and the Humber",
     admission == "Members",
-    n_2022 >= 100000
+    n_2022 > 100000
     ) %>%
   count()
 ```
@@ -128,22 +132,24 @@ visitors %>%
 
 _How many attractions had between 50,000 and 100,000 visitors in 2022?_
 
+_50_
 ```{r Ex_f}
-#visitors %>% 
-#  ____(
-#    ______,
-#    ______ ) %>%
-#  count()
+visitors %>% 
+  filter(
+    n_2022<100000,
+     n_2022>50000) %>%
+  count()
 ```
 
 ### Exercise g.
 
-_How many regions have more than 50 tourist attraction in the data set? (Hint: You will need to tabulate the data before filtering.)_
+_How many regions have more than 50 tourist attractions in the data set? (Hint: You will need to tabulate the data before filtering.)_
 
+_1, Scotland_
 ```{r Ex_g}
-#visitors %>% 
-#  _____(region) %>%
-#  filter(______)
+visitors %>% 
+  count(region) %>%
+  filter(n>50)
 ```
 
 
@@ -168,11 +174,11 @@ visitors %>%
 _Perform the same calculation for the 2021 admissions data._
 
 ```{r Ex_h}
-#visitors %>% 
-#  ______(
-#    __________,
-#    __________
-#  )
+visitors %>% 
+  summarise(
+    mean_2021 = mean(n_2021, na.rm=TRUE),
+    median_2021 = median(n_2021, na.rm=TRUE)
+  )
 ```
 
 All values in the output are `NA`!
@@ -183,7 +189,7 @@ _What does `NA` stand for and why are you getting this as your answer to the pre
 
 **Write your answer here**
 
-
+_Not available, some values for visitor count are not available and instead display na_
 
 
 ### Exercise j.
@@ -192,13 +198,14 @@ _Look at the help pages for the `mean()` and `median()` commands to see what the
 
 **Write your answer here**
 
-
+_Mean = 232430.7	Median = 129829_
 
 
 ## Question 7
 
 _Which setting (inside, outside or mixed) has the largest mean visitor numbers in 2022?_
 
+_Inside_
 ```{r Q7}
 visitors %>% 
   group_by(setting) %>%
@@ -214,7 +221,7 @@ _Observe in question 6 that the mean statistics across all settings are much lar
 
 **Write your answer here**
 
-
+_The data is skewed by very large (outlier?) values_
 
 
 ## Question 8
@@ -245,8 +252,8 @@ _How many tourist attractions are there in each of the 4 nations? From this, dis
 
 
 ```{r Ex_l}
-#________ %>%
-#  ______(_______)
+visitors_with_nations %>%
+  count(nation)
 ```
 
 
